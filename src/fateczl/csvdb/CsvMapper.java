@@ -19,25 +19,16 @@ public interface CsvMapper<T> {
    * Converts a record of type T and its associated ID into a CSV string representation.
    *
    * @param id  the unique identifier of the record
-   * @param rec the record to be converted to a CSV string
+   * @param object the record to be converted to a CSV string
    * @return a CSV string representation of the record
    */
-  String unmap(Integer id, T rec);
+  String unmap(Integer id, T object);
 
   /**
-   * Converts the given record of type T into its corresponding string representation.
+   * Converts the given record of type T into a CSV string representation.
    *
-   * @param rec the record to be converted into a string
-   * @return the string representation of the given record
+   * @param object the record to be converted to a CSV string
+   * @return a CSV string representation of the record
    */
-  String unmap(T rec);
-
-  /**
-   * Compares two objects of type T for equality.
-   *
-   * @param obj1 the first object to be compared
-   * @param obj2 the second object to be compared
-   * @return true if the objects are considered equal, false otherwise
-   */
-  boolean equals(T obj1, T obj2);
+  String unmap(T object);
 }

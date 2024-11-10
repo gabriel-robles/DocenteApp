@@ -13,8 +13,16 @@ public class Queue<T> {
    */
   private int size = 0;
 
-
+  /**
+   * The first node in the queue.
+   * This node represents the front of the queue where elements are dequeued.
+   */
   private Node<T> first;
+
+  /**
+   * The last node in the queue.
+   * This node represents the most recently added element in the queue.
+   */
   private Node<T> last;
 
   /**

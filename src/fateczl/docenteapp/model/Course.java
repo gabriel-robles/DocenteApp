@@ -2,73 +2,31 @@ package fateczl.docenteapp.model;
 
 import fateczl.csvdb.annotations.CsvColumn;
 
-/**
- * The Course class represents a course with an ID, code, name, and knowledge area.
- * It provides methods to create, update, and convert Course objects to and from Record objects.
- * 
- * <p>Example usage:
- * <pre>
- *     Course course = Course.create(
- *          "CS101", "Introduction to Computer Science", "Computer Science");
- *     System.out.println(course);
- * </pre>
- * </p>
- * 
- * <p>Methods:
- * <ul>
- *     <li>{@link #create(String, String, String)} - Creates a new Course instance.</li>
- *     <li>
- *      {@link #update(Course, String, String, String)} - Updates an existing Course instance.
- *     </li>
- *     <li>{@link #getId()} - Returns the ID of the course.</li>
- *     <li>{@link #getCode()} - Returns the code of the course.</li>
- *     <li>{@link #getName()} - Returns the name of the course.</li>
- *     <li>{@link #getKnowledgeArea()} - Returns the knowledge area of the course.</li>
- *     <li>{@link #toString()} - Returns a string representation of the Course instance.</li>
- * </ul>
- * </p>
- * 
- * <p>Note: The constructor is private and should be accessed via the static methods 
- * {@link #create(String, String, String)} and {@link #update(Course, String, String, String)}.</p>
- *
- * @see Record
- */
 public class Course {
-  public static final String ID_COLUMN = "Id";
-  public static final String CODE_COLUMN = "Code";
-  public static final String NAME_COLUMN = "Name";
-  public static final String KNOWLEDGE_AREA_COLUMN = "KnowledgeArea";
+  @CsvColumn(columnIndex = "0", columnName = "Id", primaryKey = true)
+  private final Integer id;
 
-  @CsvColumn(columnIndex = "0", columnName = ID_COLUMN, primaryKey = true)
-  private Integer id;
+  @CsvColumn(columnIndex = "1", columnName = "Code")
+  private final String code;
 
-  @CsvColumn(columnIndex = "1", columnName = CODE_COLUMN)
-  private String code;
-
-  @CsvColumn(columnIndex = "2", columnName = NAME_COLUMN)
-  private String name;
+  @CsvColumn(columnIndex = "2", columnName = "Name")
+  private final String name;
   
-  @CsvColumn(columnIndex = "3", columnName = KNOWLEDGE_AREA_COLUMN)
-  private String knowledgeArea;
+  @CsvColumn(columnIndex = "3", columnName = "KnowledgeArea")
+  private final String knowledgeArea;
 
-  /**
-   * Default constructor for the Course class.
-   * Initializes a new instance of the Course class.
-   */
   public Course() {
+    this.id = null;
+    this.code = null;
+    this.name = null;
+    this.knowledgeArea = null;
   }
 
-  private Course(String code, String name, String knowledgeArea) {
-    this.code = code;
-    this.name = name;
-    this.knowledgeArea = knowledgeArea;
-  }
-
-  private Course(Integer id, String code, String name, String knowledgeArea) {
-    this.id = id;
-    this.code = code;
-    this.name = name;
-    this.knowledgeArea = knowledgeArea;
+  Course(Builder builder) {
+    this.id = builder.id;
+    this.code = builder.code;
+    this.name = builder.name;
+    this.knowledgeArea = builder.knowledgeArea;
   }
   
   public Integer getId() {
@@ -87,31 +45,6 @@ public class Course {
     return knowledgeArea;
   }
 
-  /**
-   * Creates a new Course instance with the specified code, name, and knowledge area.
-   *
-   * @param code the unique code of the course
-   * @param name the name of the course
-   * @param knowledgeArea the knowledge area to which the course belongs
-   * @return a new Course instance
-   */
-  public static Course create(String code, String name, String knowledgeArea) {
-    return new Course(code, name, knowledgeArea);
-  }
-
-  /**
-   * Updates the details of an existing Course object.
-   *
-   * @param course The existing Course object to be updated.
-   * @param code The new code for the course.
-   * @param name The new name for the course.
-   * @param knowledgeArea The new knowledge area for the course.
-   * @return A new Course object with the updated details.
-   */
-  public static Course update(Course course, String code, String name, String knowledgeArea) {
-    return new Course(course.id, code, name, knowledgeArea);
-  }
-
   @Override
   public String toString() {
     return "Course{"
@@ -120,5 +53,68 @@ public class Course {
         + ", name='" + name + '\''
         + ", knowledgeArea='" + knowledgeArea + '\''
         + '}';
+  }
+
+  /**
+   * Builder class for constructing Course objects.
+   */
+  public static class Builder {
+    private Integer id;
+    private String code;
+    private String name;
+    private String knowledgeArea;
+
+    /**
+     * Sets the id for the course.
+     *
+     * @param id the id to set
+     * @return the Builder instance for method chaining
+     */
+    public Builder id(Integer id) {
+      this.id = id;
+      return this;
+    }
+
+    /**
+     * Sets the code for the course.
+     *
+     * @param code the code to set
+     * @return the Builder instance for method chaining
+     */
+    public Builder code(String code) {
+      this.code = code;
+      return this;
+    }
+
+    /**
+     * Sets the name of the course.
+     *
+     * @param name the name of the course
+     * @return the Builder instance for chaining
+     */
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    /**
+     * Sets the name of the course.
+     *
+     * @param name the name of the course
+     * @return the Builder instance for chaining
+     */
+    public Builder knowledgeArea(String knowledgeArea) {
+      this.knowledgeArea = knowledgeArea;
+      return this;
+    }
+
+    /**
+     * Builds and returns a new Course instance using the current state of the builder.
+     *
+     * @return a new Course instance
+     */
+    public Course build() {
+      return new Course(this);
+    }
   }
 }

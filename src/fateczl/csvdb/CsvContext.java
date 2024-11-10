@@ -2,6 +2,7 @@ package fateczl.csvdb;
 
 import fateczl.util.Queue;
 import java.io.IOException;
+import java.util.function.Predicate;
 
 
 /**
@@ -16,28 +17,46 @@ public interface CsvContext<T> {
    */
   Queue<T> readAll() throws IOException;
 
-
   /**
-   * Inserts a new record into the CSV database.
+   * Inserts the specified object into the CSV database.
    *
-   * @param rec the record to be inserted
+   * @param object the object to be inserted
    * @throws IOException if an I/O error occurs during the insertion process
    */
-  void insert(T rec) throws IOException;
+  void insert(T object) throws IOException;
 
   /**
-   * Updates an existing record in the CSV database.
+   * Updates an object in the CSV database that matches the given predicate.
    *
-   * @param rec the record to be updated
+   * @param object the object to update in the database
+   * @param predicate the condition to match the object that needs to be updated
    * @throws IOException if an I/O error occurs during the update process
    */
-  void update(T rec) throws IOException;
+  void update(T object, Predicate<T> predicate) throws IOException;
 
   /**
-   * Deletes a record from the CSV database.
+   * Deletes entries from the CSV database that match the given predicate.
    *
-   * @param rec the record to be deleted
+   * @param predicate the condition to determine which entries should be deleted
    * @throws IOException if an I/O error occurs during the deletion process
    */
-  void delete(T rec) throws IOException;
+  void delete(Predicate<T> predicate) throws IOException;
+
+  /**
+   * Finds and returns a queue of elements that match the given predicate.
+   *
+   * @param predicate the condition to be matched by the elements
+   * @return a queue of elements that satisfy the predicate
+   * @throws IOException if an I/O error occurs
+   */
+  Queue<T> findMany(Predicate<T> predicate) throws IOException;
+
+  /**
+   * Finds the first record that matches the given predicate.
+   *
+   * @param predicate the predicate to match
+   * @return the record that matches the predicate, or null if no such record is found
+   * @throws IOException if an I/O error occurs during the search process
+   */
+  T find(Predicate<T> predicate) throws IOException;
 }

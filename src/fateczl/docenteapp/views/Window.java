@@ -32,7 +32,6 @@ public class Window extends JFrame {
     var coursePanel = new GetCourses();
     var subjectPanel = new GetSubjects();
     
-    tabbedPane.addTab("Cursos", null, coursePanel, "Cursos");
     tabbedPane.addTab("Discplinas", null, subjectPanel, "Disciplinas");
 
     tabbedPane.addTab("Cursos", null, coursePanel, "Cursos");

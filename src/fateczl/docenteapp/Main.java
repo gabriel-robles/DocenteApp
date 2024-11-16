@@ -9,7 +9,7 @@ public class Main {
       try {
         new Window().setVisible(true);
       } catch (Exception e) {
-        e.printStackTrace();
+    	  e.printStackTrace();
       }
     });
   }

@@ -75,7 +75,7 @@ public class CsvContextImpl<T> implements CsvContext<T> {
     this.mapper = mapper;
     this.dbFile = new File(currentDir, filename);
     this.lastIndexFile = new File(currentDir, filename.replace(".csv", "last.txt"));
-    
+
     createFiles(); 
   }
 

@@ -9,6 +9,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import fateczl.docenteapp.views.course.GetCourses;
+import fateczl.docenteapp.views.subject.GetSubjects;
+import fateczl.docenteapp.views.registrations.GetRegistration;
+import fateczl.docenteapp.views.teacher.GetTeacher;
 
 public class Window extends JFrame {
   public Window() throws IOException {
@@ -26,8 +29,19 @@ public class Window extends JFrame {
     contentPane.add(tabbedPane);
 
     var coursePanel = new GetCourses();
-    tabbedPane.addTab("Cursos", null, coursePanel, "Cursos");
 
+    var subjectPanel = new GetSubjects();
+    
+    tabbedPane.addTab("Discplinas", null, subjectPanel, "Disciplinas");
+
+    tabbedPane.addTab("Cursos", null, coursePanel, "Cursos");
+    
+    var teacherPanel = new GetTeacher();
+    tabbedPane.addTab("Professores", null, teacherPanel, "Professores");
+    
+    var registrationPanel = new GetRegistration();
+    tabbedPane.addTab("Inscrições", null, registrationPanel, "Inscrições");
+    
     pack();
   }
 }

@@ -2,92 +2,120 @@ package fateczl.docenteapp.model;
 
 import fateczl.csvdb.annotations.CsvColumn;
 
-
-
 public class Registration {
-	
-	@CsvColumn(columnIndex = "0", columnName = "id", primaryKey = true)
-	  private final Integer id;
+	@CsvColumn(columnIndex = "0", columnName = "Id", primaryKey = true)
+	private final Integer id;
 
-	  @CsvColumn(columnIndex = "1", columnName = "CPFRegistration")
-	  private final String nCPFRegistration;
+	@CsvColumn(columnIndex = "1", columnName = "Cpf")
+	private final String cpf;
 
-	  @CsvColumn(columnIndex = "2", columnName = "CodigoDisciplinaRegistration")
-	  private final String codigoDisciplinaRegistration;
+	@CsvColumn(columnIndex = "2", columnName = "SubjectCode")
+	private final String subjectCode;
 	  
-	  @CsvColumn(columnIndex = "3", columnName = "CodigoProcessoRegistration")
-	  private final String codigoProcessoRegistration;
+	@CsvColumn(columnIndex = "3", columnName = "ProcessCode")
+	private final String processCode;
 	  
-	  public Registration() {
-		  this.id = null;
-		  this.nCPFRegistration = null;
-		  this.codigoDisciplinaRegistration = null;
-		  this.codigoProcessoRegistration = null;
-	  }
+	public Registration() {
+		id = null;
+		cpf = null;
+		subjectCode = null;
+		processCode = null;
+	}
 	  
-	  Registration(Builder builder){
-		  this.id = builder.id;
-		  this.nCPFRegistration = builder.nCPFRegistration;
-		  this.codigoDisciplinaRegistration = builder.codigoDisciplinaRegistration;
-		  this.codigoProcessoRegistration = builder.codigoProcessoRegistration;
-	  }
+	private Registration(Builder builder){
+	  id = builder.id;
+	  cpf = builder.cpf;
+	  subjectCode = builder.subjectCode;
+	  processCode = builder.processCode;
+	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	public String getCPFRegistration() {
-		return nCPFRegistration;
+	public String getCpf() {
+		return cpf;
 	}
 
-	public String getCodigoDisciplinaRegistration() {
-		return codigoDisciplinaRegistration;
+	public String getSubjectCode() {
+		return subjectCode;
 	}
 
-	public String getCodigoProcessoRegistration() {
-		return codigoProcessoRegistration;
+	public String getProcessCode() {
+		return processCode;
 	}
 	  
-	  @Override
+	@Override
 	public String toString() {
-		  return "Registrartion{"
-			        + "id=" + id
-			        + ", nCPFRegistration='" + nCPFRegistration + '\''
-			        + ", codigoDisciplinaRegistration='" + codigoDisciplinaRegistration + '\''
-			        + ", codigoProcessoRegistration='" + codigoProcessoRegistration + '\''
-			        + '}';
+		return "Registrartion{"
+		    + "id=" + id
+		    + ", cpf='" + cpf + '\''
+		    + ", subjectCode='" + subjectCode + '\''
+		    + ", processCode='" + processCode + '\''
+		    + '}';
 	}
 	  
 	  
+	/**
+	 * Builder class for constructing instances of {@link Registration}.
+	 */
 	public static class Builder {
 		private Integer id;
-		private String nCPFRegistration;
-		private String codigoDisciplinaRegistration;
-		private String codigoProcessoRegistration;
+		private String cpf;
+		private String subjectCode;
+		private String processCode;
 	
-		
-			public Builder Id(Integer id) {
-				this.id = id;
-				return this;
-			}
+		/**
+		 * Sets the id for the registration.
+		 *
+		 * @param id the id to set
+		 * @return the Builder instance for method chaining
+		 */
+		public Builder id(Integer id) {
+			this.id = id;
+			return this;
+		}
 			
-			public Builder CPFRegistration(String nCPFRegistration) {
-				this.nCPFRegistration = nCPFRegistration;
-				return this;
-			}
+		/**
+		 * Sets the CPF for the registration.
+		 *
+		 * @param cpf the CPF to set
+		 * @return the Builder instance for method chaining
+		 */
+		public Builder cpf(String cpf) {
+			this.cpf = cpf;
+			return this;
+		}
 			
-			public Builder CodigoDisciplinaRegistration(String codigoDisciplinaRegistration) {
-				this.codigoDisciplinaRegistration = codigoDisciplinaRegistration;
-				return this;
-			}
+		/**
+		 * Sets the subject code for the registration.
+		 *
+		 * @param subjectCode the code of the subject to be set
+		 * @return the Builder instance for method chaining
+		 */
+		public Builder subjectCode(String subjectCode) {
+			this.subjectCode = subjectCode;
+			return this;
+		}
 			
-			public Builder CodigoProcessoRegistration(String codigoProcessoRegistration) {
-				this.codigoProcessoRegistration = codigoProcessoRegistration;
-				return this;
-			}
+		/**
+		 * Sets the process code for the registration.
+		 *
+		 * @param processCode the process code to set
+		 * @return the Builder instance for method chaining
+		 */
+		public Builder processCode(String processCode) {
+			this.processCode = processCode;
+			return this;
+		}
 			
-			public Registration build() {
-				return new Registration(this);
-			}
+		/**
+		 * Builds and returns a new instance of the Registration class using the current state of the builder.
+		 *
+		 * @return a new Registration instance
+		 */
+		public Registration build() {
+			return new Registration(this);
+		}
 	}   
 }

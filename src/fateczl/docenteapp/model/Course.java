@@ -22,7 +22,7 @@ public class Course {
     this.knowledgeArea = null;
   }
 
-  Course(Builder builder) {
+  private Course(Builder builder) {
     this.id = builder.id;
     this.code = builder.code;
     this.name = builder.name;
@@ -56,7 +56,7 @@ public class Course {
   }
 
   /**
-   * Builder class for constructing Course objects.
+   * Builder class for constructing instances of {@link Course}.
    */
   public static class Builder {
     private Integer id;
@@ -89,7 +89,7 @@ public class Course {
     /**
      * Sets the name of the course.
      *
-     * @param name the name of the course
+     * @param name the name to set
      * @return the Builder instance for chaining
      */
     public Builder name(String name) {
@@ -98,10 +98,10 @@ public class Course {
     }
 
     /**
-     * Sets the name of the course.
+     * Sets the knowledge area of the course.
      *
-     * @param name the name of the course
-     * @return the Builder instance for chaining
+     * @param knowledgeArea the knowledge area to set
+     * @return the Builder instance for method chaining
      */
     public Builder knowledgeArea(String knowledgeArea) {
       this.knowledgeArea = knowledgeArea;

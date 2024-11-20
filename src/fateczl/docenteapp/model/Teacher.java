@@ -2,111 +2,141 @@ package fateczl.docenteapp.model;
 
 import fateczl.csvdb.annotations.CsvColumn;
 
-public class Teacher 
-{
+public class Teacher {
 	@CsvColumn(columnIndex = "0", columnName = "Id", primaryKey = true)
-	  private final Integer id;
+	private final Integer id;
 
-	  @CsvColumn(columnIndex = "1", columnName = "NomeTeacher")
-	  private final String nomeTeacher;
+  @CsvColumn(columnIndex = "1", columnName = "Name")
+  private final String name;
 
-	  @CsvColumn(columnIndex = "2", columnName = "nCPFTeacher")
-	  private final String nCPFTeacher;
+  @CsvColumn(columnIndex = "2", columnName = "Cpf")
+  private final String cpf;
 	  
-	  @CsvColumn(columnIndex = "3", columnName = "AreaTeacher")
-	  private final String areaTeacher;
+  @CsvColumn(columnIndex = "3", columnName = "Area")
+  private final String area;
 	  
-	  @CsvColumn(columnIndex = "4", columnName = "Pontuacao")
-	  private final Integer pontuacao;
+  @CsvColumn(columnIndex = "4", columnName = "Score")
+  private final Integer score;
 	   
-	  public Teacher() {
-	    this.id = null;
-	    this.nomeTeacher = null;
-	    this.nCPFTeacher = null;
-	    this.areaTeacher = null;
-	    this.pontuacao = null;
-	  }
+  public Teacher() {
+    this.id = null;
+    this.name = null;
+    this.cpf = null;
+    this.area = null;
+    this.score = null;
+  }
 
-	  Teacher(Builder builder) {
-	    this.id = builder.id;
-	    this.nomeTeacher = builder.nomeTeacher;
-	    this.nCPFTeacher = builder.nCPFTeacher;
-	    this.areaTeacher = builder.areaTeacher;
-	    this.pontuacao = builder.pontuacao;
-	    
-	  }
+  private Teacher(Builder builder) {
+    this.id = builder.id;
+    this.name = builder.name;
+    this.cpf = builder.cpf;
+    this.area = builder.area;
+    this.score = builder.score;
+  }
 	  
-	  public Integer getId() {
-	    return id;
-	  }
+	public Integer getId() {
+	  return id;
+	}
 	  
-	  public String getNomeTeacher() {
-	    return nomeTeacher;
-	  }
+  public String getName() {
+    return name;
+  }
 	  
-	  public String getCPFTeacher() {
-	    return nCPFTeacher;
-	  }
+  public String getCpf() {
+    return cpf;
+  }
 	  
-	  public String getAreaTeacher() {
-	    return areaTeacher;
-	  }
+  public String getArea() {
+    return area;
+  }
 	  
-	  public Integer getPontuacaoTeacher() {
-		    return pontuacao;
-		  }
+  public Integer getScore() {
+	  return score;
+	}
 
+	@Override
+	public String toString() {
+	  return "Course{"
+	      + "id=" + id
+	      + ", name='" + name + '\''
+	      + ", cpf='" + cpf + '\''
+	      + ", area='" + area + '\''
+	      + ", score='" + score + '\''
+	      + '}';
+	}
 
-	  @Override
-	  public String toString() {
-	    return "Course{"
-	        + "id=" + id
-	        + ", nomeTeacher='" + nomeTeacher + '\''
-	        + ", nCPFTeacher='" + nCPFTeacher + '\''
-	        + ", areaTeacher='" + areaTeacher + '\''
-	        + ", pontuacao='" + pontuacao + '\''
-	        + '}';
-	  }
-
-	  public static class Builder {
-	    private Integer id;
-	    private String nomeTeacher;
-	    private String nCPFTeacher;
-		private String areaTeacher;
-		private Integer pontuacao;
-		
+	/**
+	 * Builder class for constructing instances of {@link Teacher}.
+	 */
+	public static class Builder {
+	  private Integer id;
+	  private String name;
+	  private String cpf;
+		private String area;
+		private Integer score;
 			 
-	    public Builder id(Integer id) {
-	      this.id = id;
-	      return this;
-	    }
-
-	
-	    public Builder NomeTeacher(String nomeTeacher) {
-	      this.nomeTeacher = nomeTeacher;
-	      return this;
-	    }
-
-	
-	    public Builder CPFTeacher(String nCPFTeacher) {
-	      this.nCPFTeacher = nCPFTeacher;
-	      return this;
-	    }
-
-	 
-	    public Builder AreaTeacher(String areaTeacher) {
-	      this.areaTeacher = areaTeacher;
-	      return this;
-	    }
-
-	    
-	    public Builder Pontuacao(Integer pontuacao) {
-		      this.pontuacao = pontuacao;
-		      return this;
-		    }
-	    
-	    public Teacher build() {
-	      return new Teacher(this);
-	    }
+		/**
+		 * Sets the id of the teacher.
+		 *
+		 * @param id the id to set
+		 * @return the Builder instance for method chaining
+		 */
+	  public Builder id(Integer id) {
+	    this.id = id;
+	    return this;
 	  }
+	
+		/**
+		 * Sets the name of the teacher.
+		 *
+		 * @param name the name of the teacher
+		 * @return the Builder instance for chaining
+		 */
+	  public Builder name(String name) {
+	    this.name = name;
+	    return this;
+	  }
+	
+		/**
+		 * Sets the CPF for the teacher.
+		 *
+		 * @param cpf the CPF of the teacher
+		 * @return the Builder instance for method chaining
+		 */
+	  public Builder cpf(String cpf) {
+	    this.cpf = cpf;
+	    return this;
+	  }
+	 
+		/**
+		 * Sets the area of expertise for the teacher.
+		 *
+		 * @param area the area of expertise to set
+		 * @return the Builder instance for method chaining
+		 */
+	  public Builder area(String area) {
+	    this.area = area;
+	    return this;
+	  }
+	    
+		/**
+		 * Sets the score for the teacher.
+		 *
+		 * @param score the score to be assigned to the teacher
+		 * @return the Builder instance for method chaining
+		 */
+	  public Builder score(Integer score) {
+		  this.score = score;
+		  return this;
+		}
+	    
+		/**
+		 * Builds and returns a new Teacher instance using the current state of the builder.
+		 *
+		 * @return a new Teacher instance
+		 */
+	  public Teacher build() {
+	    return new Teacher(this);
+	  }
+	}
 }

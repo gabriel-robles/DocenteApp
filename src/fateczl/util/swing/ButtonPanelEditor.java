@@ -16,25 +16,20 @@ import javax.swing.JTable;
  */
 public class ButtonPanelEditor extends DefaultCellEditor {
   private final JPanel panel;
-  private final JButton editButton;
-  private final JButton deleteButton;
 
-  public JButton getEditButton() {
-    return editButton;
-  }
-
-  public JButton getDeleteButton() {
-    return deleteButton;
-  }
-
-  public ButtonPanelEditor(JCheckBox checkBox) {
+  public ButtonPanelEditor(JCheckBox checkBox, JButton button1, JButton button2) {
     super(checkBox);
     panel = new JPanel();
     panel.setLayout(new GridLayout(1, 2));
-    editButton = new JButton("Editar");
-    deleteButton = new JButton("Deletar");
-    panel.add(editButton);
-    panel.add(deleteButton);
+    panel.add(button1);
+    panel.add(button2);
+  }
+
+  public ButtonPanelEditor(JCheckBox checkBox, JButton button1) {
+    super(checkBox);
+    panel = new JPanel();
+    panel.setLayout(new GridLayout(1, 1));
+    panel.add(button1);
   }
 
   @Override

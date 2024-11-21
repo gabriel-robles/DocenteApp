@@ -1,7 +1,8 @@
 package fateczl.docenteapp.views.course;
 
 import fateczl.docenteapp.controllers.CourseController;
-import fateczl.docenteapp.views.dtos.CourseDto;
+import fateczl.docenteapp.controllers.dtos.CourseDto;
+
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ public class EditCourse extends JPanel {
     codeTextField = new JTextField();
     codeTextField.setBounds(170, 40, 400, 20);
     codeTextField.setPreferredSize(new Dimension(400, 28));
+    codeTextField.setEditable(false);
 
     var nameLabel = new JLabel("Nome do Curso:");
     nameLabel.setBounds(10, 70, 200, 20);

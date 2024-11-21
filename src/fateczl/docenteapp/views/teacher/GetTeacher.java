@@ -6,20 +6,15 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
-import fateczl.csvdb.CsvContextFactory;
-import fateczl.csvdb.CsvMapperFactory;
 import fateczl.docenteapp.controllers.TeacherController;
-import fateczl.docenteapp.model.Teacher;
-import fateczl.docenteapp.views.dtos.TeacherDto;
+import fateczl.docenteapp.controllers.dtos.TeacherDto;
 import fateczl.util.swing.ButtonPanelRenderer;
 import fateczl.util.swing.CustomTableModel;
 import fateczl.util.swing.FixedTableColumnModel;
@@ -29,9 +24,6 @@ public class GetTeacher extends JPanel
 {
 	 private final transient TeacherController teacherController;
 	  private JButton createButton;
-	  private JButton searchButton;
-	  private JComboBox<String> filterByComboBox;
-	  private JTextField searchTextField;
 	  private JPanel cardPanel;
 	  private JPanel menuPanel;
 	  private CardLayout cardLayout;
@@ -39,10 +31,8 @@ public class GetTeacher extends JPanel
 	  private JScrollPane listPanel;
 	  private EditTeacher editPanel;
 
-	  public GetTeacher() throws IOException{
-	    var teacherMapper = CsvMapperFactory.create(Teacher.class);
-	    var teacherContext = CsvContextFactory.create("teacher", teacherMapper, Teacher.class);
-	    this.teacherController = new TeacherController(teacherContext);
+	  public GetTeacher(TeacherController teacherController) throws IOException{
+	    this.teacherController = teacherController;
 
 	    splitPane = new JSplitPane();
 	    splitPane.setPreferredSize(new Dimension(700, 425));
@@ -90,10 +80,10 @@ public class GetTeacher extends JPanel
 	    while (!teacher.isEmpty()) {
 	      var teachers = teacher.dequeue();
 	      data[i][0] = teachers.getId();
-	      data[i][1] = teachers.getNomeTeacher();
-	      data[i][2] = teachers.getCPFTeacher();
-	      data[i][3] = teachers.getAreaTeacher();
-	      data[i][4] = teachers.getPontuacaoTeacher();
+	      data[i][1] = teachers.getName();
+	      data[i][2] = teachers.getCpf();
+	      data[i][3] = teachers.getArea();
+	      data[i][4] = teachers.getScore();
 	 	  data[i][5] ="Ações";
 	      i++;
 	    }
@@ -101,15 +91,18 @@ public class GetTeacher extends JPanel
 	    var columnNames = new String[] { "Id", "Nome", "CPF", "Área de interesse","Pontuação", "Ações" };
 
 	    var tableModel = new CustomTableModel(data, columnNames, new int[] { 5 });
-	    var columnModel = new FixedTableColumnModel(0);
+	    var columnModel = new FixedTableColumnModel();
 
 	    var table = new JTable(tableModel, columnModel);
 	    table.createDefaultColumnsFromModel();
-	    table.getColumn("Ações").setCellRenderer(new ButtonPanelRenderer());
+	    table.getColumn("Ações").setCellRenderer(new ButtonPanelRenderer("Editar", "Deletar"));
 
-	    var buttonPanelEditor = new ButtonPanelEditor(new JCheckBox());
+			var editButton = new JButton("Editar");
+			var deleteButton = new JButton("Deletar");
+
+	    var buttonPanelEditor = new ButtonPanelEditor(new JCheckBox(), editButton, deleteButton);
 	    
-	    buttonPanelEditor.getEditButton().addActionListener(e -> {
+	    editButton.addActionListener(e -> {
 	      var row = table.getSelectedRow();
 	      var id = table.getValueAt(row, 0);
 	      var nomeTeacher = table.getValueAt(row, 1);
@@ -130,7 +123,7 @@ public class GetTeacher extends JPanel
 	      cardLayout.show(cardPanel, "Edit Panel");
 	    });
 
-	    buttonPanelEditor.getDeleteButton().addActionListener(e -> {
+	    deleteButton.addActionListener(e -> {
 	      var row = table.getSelectedRow();
 	      var id = table.getValueAt(row, 0);
 	      teacherController.delete((Integer) id);
@@ -144,7 +137,11 @@ public class GetTeacher extends JPanel
 	    table.getColumnModel().getColumn(0).setMaxWidth(0);
 	    table.getColumnModel().getColumn(0).setWidth(0);
 	    table.getColumnModel().getColumn(0).setPreferredWidth(0);
-	    table.getColumnModel().getColumn(4).setPreferredWidth(160);
+			table.getColumnModel().getColumn(1).setPreferredWidth(200);
+			table.getColumnModel().getColumn(2).setPreferredWidth(100);
+			table.getColumnModel().getColumn(3).setPreferredWidth(200);
+	    table.getColumnModel().getColumn(4).setPreferredWidth(80);
+			table.getColumnModel().getColumn(5).setPreferredWidth(160);
 
 	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -158,25 +155,13 @@ public class GetTeacher extends JPanel
 	    menuPanel = new JPanel();
 	    menuPanel.setLayout(null);
 
-	    var filterByLabel = new JLabel("Filtrar por");
-	    filterByLabel.setBounds(10, 5, 200, 25);
-
-	    filterByComboBox = new JComboBox<>(new String[] { "Nome", "CPF", "Área de Interesse","Pontuação" });
-	    filterByComboBox.setBounds(10, 26, 160, 23);
-
-	    searchTextField = new JTextField();
-	    searchTextField.setBounds(172, 26, 200, 25);
-
-	    searchButton = new JButton("buscar");
-	    searchButton.setBounds(374, 26, 100, 23);
+	    var lblTitle = new JLabel("Professores");
+    	lblTitle.setBounds(300, 26, 100, 14);
 
 	    createButton = new JButton("cadastrar");
 	    createButton.setBounds(550, 26, 100, 23);
 
-	    menuPanel.add(filterByLabel);
-	    menuPanel.add(filterByComboBox);
-	    menuPanel.add(searchTextField);
-	    menuPanel.add(searchButton);
+			menuPanel.add(lblTitle);
 	    menuPanel.add(createButton);
 
 	    return menuPanel;

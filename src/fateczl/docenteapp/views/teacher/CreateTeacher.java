@@ -2,11 +2,13 @@ package fateczl.docenteapp.views.teacher;
 
 import javax.swing.JPanel;
 import fateczl.docenteapp.controllers.TeacherController;
-import fateczl.docenteapp.views.dtos.TeacherDto;
+import fateczl.docenteapp.controllers.dtos.TeacherDto;
 
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
+import javax.swing.JFormattedTextField;
 
 import java.awt.CardLayout;
 import javax.swing.JButton;
@@ -51,8 +53,15 @@ public class CreateTeacher extends JPanel {
 	    add(tfNomeTeacherCreate);
 	    tfNomeTeacherCreate.setColumns(10);
 	    
-	    tfTeacherCPFCreate = new JTextField();
-	    tfTeacherCPFCreate.setBounds(114, 70, 314, 19);
+			try {
+				MaskFormatter cpfFormatter = new MaskFormatter("###.###.###-##");
+				cpfFormatter.setPlaceholderCharacter('0');
+				tfTeacherCPFCreate = new JFormattedTextField(cpfFormatter);
+	    	tfTeacherCPFCreate.setBounds(114, 70, 314, 19);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 	    add(tfTeacherCPFCreate);
 	    tfTeacherCPFCreate.setColumns(10);
 	    
@@ -66,7 +75,7 @@ public class CreateTeacher extends JPanel {
 	    tfPontuacaoTeacherCreate.setColumns(10);
 	    add(tfPontuacaoTeacherCreate); 
 	    
-	    JButton btnSalvaTeacherCreate = new JButton("Salva");
+	    JButton btnSalvaTeacherCreate = new JButton("salvar");
 	    btnSalvaTeacherCreate.setBounds(305, 200, 80, 20);
 	    add(btnSalvaTeacherCreate);
 	    
@@ -92,7 +101,7 @@ public class CreateTeacher extends JPanel {
 	        cardLayout.show(parent, "Menu Panel");
 	    });
 	    	    
-	    JButton btnVoltaTeacherCreate =  new JButton("Volta");
+	    JButton btnVoltaTeacherCreate =  new JButton("voltar");
 	    btnVoltaTeacherCreate.setBounds(175, 200, 80, 20);
 	    add(btnVoltaTeacherCreate);
 	    

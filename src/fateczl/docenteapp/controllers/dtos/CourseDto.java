@@ -1,4 +1,4 @@
-package fateczl.docenteapp.views.dtos;
+package fateczl.docenteapp.controllers.dtos;
 
 public class CourseDto {
 	private String code;

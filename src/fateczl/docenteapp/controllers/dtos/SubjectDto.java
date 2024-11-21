@@ -1,59 +1,67 @@
-package fateczl.docenteapp.views.dtos;
-
-import fateczl.csvdb.annotations.CsvColumn;
+package fateczl.docenteapp.controllers.dtos;
 
 public class SubjectDto {
-	
-	private Integer id;
+	private String process;
 	private String code;
 	private String name;
-	private Integer courseId;
+	private String courseCode;
 	private String day;
-	private String hoursPerDay;
 	private String startTime;
-	public Integer getId() {
-		return id;
+	private String hoursPerDay;
+
+	public String getProcess() {
+		return process;
 	}
-	public void setId(Integer id) {
-		this.id = id;
+
+	public void setProcess(String process) {
+		this.process = process;
 	}
+
 	public String getCode() {
 		return code;
 	}
+
 	public void setCode(String code) {
 		this.code = code;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getCourseId() {
-		return courseId;
+
+	public String getCourseCode() {
+		return courseCode;
 	}
-	public void setCourseId(Integer courseId) {
-		this.courseId = courseId;
+
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
 	}
+
 	public String getDay() {
 		return day;
 	}
+
 	public void setDay(String day) {
 		this.day = day;
 	}
-	public String getHoursPerDay() {
-		return hoursPerDay;
-	}
-	public void setHoursPerDay(String hoursPerDay) {
-		this.hoursPerDay = hoursPerDay;
-	}
+
 	public String getStartTime() {
 		return startTime;
 	}
+
 	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
-	
-	
-	
+
+	public String getHoursPerDay() {
+		return hoursPerDay;
+	}
+
+	public void setHoursPerDay(String hoursPerDay) {
+		this.hoursPerDay = hoursPerDay;
+	}
 }

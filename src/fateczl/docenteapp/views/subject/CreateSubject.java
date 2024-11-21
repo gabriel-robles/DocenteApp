@@ -1,31 +1,32 @@
 package fateczl.docenteapp.views.subject;
 
 import java.awt.CardLayout;
-import java.awt.Dimension;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
+import javax.swing.JFormattedTextField;
 
 import fateczl.docenteapp.controllers.CourseController;
 import fateczl.docenteapp.controllers.SubjectController;
-import fateczl.docenteapp.model.Course;
-import fateczl.docenteapp.views.course.GetCourses;
-import fateczl.docenteapp.views.dtos.SubjectDto;
-import fateczl.util.Queue;
+import fateczl.docenteapp.controllers.dtos.SubjectDto;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 public class CreateSubject extends JPanel {
 	private final transient SubjectController subjectController;
+	private final transient CourseController courseController;
 	private final transient GetSubjects getSubjects;
-	private JTextField textField;
+	private JComboBox<String> coursesTextField;
+	private JFormattedTextField startTimeField;
+	private JFormattedTextField hourPerDayField;
 
-	public CreateSubject(SubjectController subjectController, GetSubjects getSubjects,
-			CourseController courseController) {
+	public CreateSubject(SubjectController subjectController, CourseController courseController, GetSubjects getSubjects) {
 		this.subjectController = subjectController;
+		this.courseController = courseController;
 		this.getSubjects = getSubjects;
 
 		setLayout(null);
@@ -35,52 +36,59 @@ public class CreateSubject extends JPanel {
 		add(windowTitle);
 
 		var codeLabel = new JLabel("Código da Disciplina:");
-		codeLabel.setBounds(52, 39, 118, 20);
+		codeLabel.setBounds(30, 40, 120, 20);
 
 		var codeTextField = new JTextField();
 		codeTextField.setBounds(170, 40, 400, 20);
-		codeTextField.setPreferredSize(new Dimension(400, 28));
 
 		var nameLabel = new JLabel("Nome da disciplina:");
-		nameLabel.setBounds(66, 70, 105, 20);
+		nameLabel.setBounds(30, 70, 120, 20);
 
 		var nameTextField = new JTextField();
 		nameTextField.setBounds(170, 70, 400, 20);
-		nameTextField.setPreferredSize(new Dimension(400, 28));
 
 		var courseLabel = new JLabel("Curso:");
-		courseLabel.setBounds(124, 99, 47, 20);
+		courseLabel.setBounds(30, 100, 47, 20);
 
-		JLabel hourPerDayLabel = new JLabel("Horas por dia");
-		hourPerDayLabel.setBounds(66, 142, 89, 13);
+		coursesTextField = new JComboBox<String>(getSubjects.getCourses());
+		coursesTextField.setBounds(170, 100, 400, 20);
 
 		JLabel dayLabel = new JLabel("Dia da semana");
-		dayLabel.setBounds(81, 176, 89, 13);
-		
+		dayLabel.setBounds(30, 130, 120, 20);
+
+		var dayTextField = new JComboBox<String>(
+			new String[] { "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sabádo" });
+		dayTextField.setBounds(170, 130, 120, 20);
+
 		JLabel startTimeLabel = new JLabel("Horário inicial");
-		startTimeLabel.setBounds(41, 206, 95, 13);
-		
-		var startTimeField = new JTextField();
-		startTimeField.setColumns(10);
-		startTimeField.setBounds(170, 203, 47, 19);
+		startTimeLabel.setBounds(30, 160, 120, 20);
 
-		var hourPerDayField = new JTextField();
-		hourPerDayField.setBounds(170, 139, 32, 19);
-		hourPerDayField.setColumns(10);
+		try {
+			MaskFormatter hourFormatter = new MaskFormatter("##:##");
+			hourFormatter.setPlaceholderCharacter('0');
+			startTimeField = new JFormattedTextField(hourFormatter);
+			startTimeField.setBounds(170, 160, 47, 20);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-		var dayTextField = new JComboBox();
-		dayTextField.setModel(new DefaultComboBoxModel(new String[] { "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sabádo", "Domingo" }));
-		dayTextField.setBounds(170, 172, 80, 21);
+		JLabel hourPerDayLabel = new JLabel("Horas por dia");
+		hourPerDayLabel.setBounds(30, 190, 120, 20);
 
-		var coursesTextField = new JComboBox();
-		coursesTextField.setModel(new DefaultComboBoxModel(subjectController.getCourses()));
-		coursesTextField.setBounds(170, 100, 80, 21);
+		try {
+			MaskFormatter hourFormatter = new MaskFormatter("##:##");
+			hourFormatter.setPlaceholderCharacter('0');
+			hourPerDayField = new JFormattedTextField(hourFormatter);
+			hourPerDayField.setBounds(170, 190, 47, 20);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		var backButton = new JButton("voltar");
-		backButton.setBounds(189, 245, 80, 20);
+		backButton.setBounds(189, 220, 80, 20);
 
 		var saveButton = new JButton("salvar");
-		saveButton.setBounds(321, 245, 80, 20);
+		saveButton.setBounds(321, 220, 80, 20);
 
 		add(codeLabel);
 		add(codeTextField);
@@ -107,7 +115,7 @@ public class CreateSubject extends JPanel {
 			var subjectDto = new SubjectDto();
 			subjectDto.setCode(codeTextField.getText());
 			subjectDto.setName(nameTextField.getText());
-			subjectDto.setCourseId(subjectController.searchCourse(coursesTextField.getSelectedItem().toString()));
+			subjectDto.setCourseCode(this.courseController.find(c -> c.getName().equals(coursesTextField.getSelectedItem().toString())).getCode());
 			subjectDto.setDay(dayTextField.getSelectedItem().toString());
 			subjectDto.setHoursPerDay(hourPerDayField.getText());
 			subjectDto.setStartTime(startTimeField.getText());
@@ -123,5 +131,9 @@ public class CreateSubject extends JPanel {
 			var cardLayout = (CardLayout) parent.getLayout();
 			cardLayout.show(parent, "Menu Panel");
 		});
+	}
+
+	public void loadData() {
+		coursesTextField.setModel(new DefaultComboBoxModel<String>(getSubjects.getCourses()));
 	}
 }

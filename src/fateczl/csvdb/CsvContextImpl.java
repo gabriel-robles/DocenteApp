@@ -115,8 +115,8 @@ public class CsvContextImpl<T> implements CsvContext<T> {
     }
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(dbFile, true))) {
-      writer.write(mapper.unmap(lastIndex, object));
       writer.newLine();
+      writer.write(mapper.unmap(lastIndex, object));
     }
   }
 
@@ -148,10 +148,17 @@ public class CsvContextImpl<T> implements CsvContext<T> {
 
     writeHeader();
 
-    for (int i = 0; i < records.size(); i++) {
+    var size = records.size();
+
+    if (size == 0) {
+      return;
+    }
+
+    for (int i = 0; i < size; i++) {
       if (predicate.test(records.get(i))) {
         records.remove(i);
-        break;
+        size--;
+        i--;
       }
     }
 
@@ -251,7 +258,6 @@ public class CsvContextImpl<T> implements CsvContext<T> {
           bw.write(DELIMITER);
         }
       }
-      bw.newLine();
     }
   }
 
@@ -266,8 +272,8 @@ public class CsvContextImpl<T> implements CsvContext<T> {
   private void writeAll(LinkedList<T> objects) throws IOException {
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(dbFile, true))) {
       for (int i = 0; i < objects.size(); i++) {
-        bw.write(mapper.unmap(objects.get(i)));
         bw.newLine();
+        bw.write(mapper.unmap(objects.get(i)));
       }
     }
   }

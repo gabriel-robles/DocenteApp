@@ -1,4 +1,4 @@
-package fateczl.docenteapp.model;
+package fateczl.docenteapp.models;
 
 import fateczl.csvdb.annotations.CsvColumn;
 

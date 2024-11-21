@@ -4,89 +4,125 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import fateczl.docenteapp.controllers.RegistrationController;
-import fateczl.docenteapp.views.registrations.GetRegistration;
-import fateczl.docenteapp.views.dtos.RegistrationDto;
+import fateczl.docenteapp.controllers.SubjectController;
+import fateczl.docenteapp.controllers.TeacherController;
+import fateczl.docenteapp.controllers.dtos.RegistrationDto;
 
-public class CreateRegistration extends JPanel
-{
+public class CreateRegistration extends JPanel {
 	private final transient RegistrationController registrationController;
-	  private final transient GetRegistration getRegistration;
+	private final transient GetRegistration getRegistration;
+	private final transient SubjectController subjectController;
+	private final transient TeacherController teacherController;
+	private JComboBox<String> candidatesComboBox;
+	private JComboBox<String> subjectComboBox;
+	private JTextField tfProcessCode;
 
-	  public CreateRegistration(RegistrationController registrationController, GetRegistration getRegistration) {
-	    this.registrationController = registrationController;
-	    this.getRegistration = getRegistration;
+	public CreateRegistration(RegistrationController registrationController, GetRegistration getRegistration,
+		SubjectController subjectController, TeacherController teacherController) {
+		
+	  this.registrationController = registrationController;
+	  this.getRegistration = getRegistration;
+		this.subjectController = subjectController;
+		this.teacherController = teacherController;
 
-	    setLayout(null);
+	  setLayout(null);
 
-	    var windowTitleRegistrationCreate = new JLabel("Cadastrar Inscrição");
-	    windowTitleRegistrationCreate.setBounds(250, 10, 200, 20);
-	    add(windowTitleRegistrationCreate);
+	  var windowTitle = new JLabel("Fazer Inscrição");
+	  windowTitle.setBounds(250, 10, 200, 20);
+	  add(windowTitle);
 
-	    var lblCPFRegistrationCreate = new JLabel("CPF do Candidato:");
-	    lblCPFRegistrationCreate.setBounds(10, 40, 200, 20);
+		var lblProcessCode = new JLabel("Código do Processo:");
+	  lblProcessCode.setBounds(10, 40, 200, 20);
 
-	    var tfCPFRegistrationCreate = new JTextField();
-	    tfCPFRegistrationCreate.setBounds(170, 40, 400, 20);
-	    tfCPFRegistrationCreate.setPreferredSize(new Dimension(400, 28));
+	  tfProcessCode = new JTextField();
+		tfProcessCode.setEditable(false);
+	  tfProcessCode.setBounds(170, 40, 400, 20);
+	  tfProcessCode.setPreferredSize(new Dimension(400, 28));
 
-	    var lblCodDisciplinaRegistrationCreate = new JLabel("Código da disciplina:");
-	    lblCodDisciplinaRegistrationCreate.setBounds(10, 70, 200, 20);
+	  var lblDisciplina = new JLabel("Código da disciplina:");
+	  lblDisciplina.setBounds(10, 70, 200, 20);
 
-	    var tfCodDisciplinaRegistrationCreate = new JTextField();
-	    tfCodDisciplinaRegistrationCreate.setBounds(170, 70, 400, 20);
-	    tfCodDisciplinaRegistrationCreate.setPreferredSize(new Dimension(400, 28));
+	  subjectComboBox = new JComboBox<String>();
+	  subjectComboBox.setBounds(170, 70, 400, 20);
+	  subjectComboBox.setPreferredSize(new Dimension(400, 28));
 
-	    var lblCodProcessoRegistrationCreate = new JLabel("Código do Processo:");
-	    lblCodProcessoRegistrationCreate.setBounds(10, 100, 200, 20);
+		var lblCpfCandidato = new JLabel("CPF do Candidato:");
+	  lblCpfCandidato.setBounds(10, 100, 200, 20);
 
-	    var tfCodProcessoRegistrationCreate = new JTextField();
-	    tfCodProcessoRegistrationCreate.setBounds(170, 100, 400, 20);
-	    tfCodProcessoRegistrationCreate.setPreferredSize(new Dimension(400, 28));
+	  candidatesComboBox = new JComboBox<String>();
+	  candidatesComboBox.setBounds(170, 100, 400, 20);
+	  candidatesComboBox.setPreferredSize(new Dimension(400, 28));
 
-	    var backButtonRegistrationCreate = new JButton("voltar");
-	    backButtonRegistrationCreate.setBounds(175, 130, 80, 20);
+	  var backButtonRegistrationCreate = new JButton("voltar");
+	  backButtonRegistrationCreate.setBounds(175, 130, 80, 20);
 	    
-	    var saveButtonRegistrationCreate = new JButton("salvar");
-	    saveButtonRegistrationCreate.setBounds(305, 130, 80, 20);
+	  var saveButtonRegistrationCreate = new JButton("salvar");
+	  saveButtonRegistrationCreate.setBounds(305, 130, 80, 20);
 
-	    add(lblCPFRegistrationCreate);
-	    add(tfCPFRegistrationCreate);
-	    add(lblCodDisciplinaRegistrationCreate);
-	    add(tfCodDisciplinaRegistrationCreate);
-	    add(lblCodProcessoRegistrationCreate);
-	    add(tfCodProcessoRegistrationCreate);
-	    add(backButtonRegistrationCreate);
-	    add(saveButtonRegistrationCreate);
+	  add(lblCpfCandidato);
+	  add(candidatesComboBox);
+	  add(lblDisciplina);
+	  add(subjectComboBox);
+	  add(lblProcessCode);
+	  add(tfProcessCode);
+	  add(backButtonRegistrationCreate);
+	  add(saveButtonRegistrationCreate);
 
-	    backButtonRegistrationCreate.addActionListener(e -> {
-	      var parent = (JPanel) getParent();
-	      var cardLayout = (CardLayout) parent.getLayout();
-	      cardLayout.show(parent, "Menu Panel");
-	    });
+	  backButtonRegistrationCreate.addActionListener(e -> {
+	    var parent = (JPanel) getParent();
+	    var cardLayout = (CardLayout) parent.getLayout();
+	    cardLayout.show(parent, "Menu Panel");
+	  });
 
-	    saveButtonRegistrationCreate.addActionListener(e -> {
-	      var registrationDto = new RegistrationDto();
-	      registrationDto.setCPFRegistration(tfCPFRegistrationCreate.getText());
-	      registrationDto.setCodigoDisciplinaRegistration(tfCodDisciplinaRegistrationCreate.getText());
-	      registrationDto.setCodigoProcessoRegistration(tfCodProcessoRegistrationCreate.getText());
+	  saveButtonRegistrationCreate.addActionListener(e -> {
+	    var registrationDto = new RegistrationDto();
+	    registrationDto.setCpf(candidatesComboBox.getSelectedItem().toString());
+	    registrationDto.setSubjectCode(subjectComboBox.getSelectedItem().toString());
+	    registrationDto.setProcessCode(tfProcessCode.getText());
 
-	      this.registrationController.save(registrationDto);
+	    this.registrationController.save(registrationDto);
 
-	      tfCPFRegistrationCreate.setText("");
-	      tfCodDisciplinaRegistrationCreate.setText("");
-	      tfCodProcessoRegistrationCreate.setText("");
+			tfProcessCode.setText("");
 
-	      this.getRegistration.refreshListPanel();
+	    this.getRegistration.refreshListPanel();
 	      
-	      var parent = (JPanel) getParent();
+	    var parent = (JPanel) getParent();
 
-	      var cardLayout = (CardLayout) parent.getLayout();
-	      cardLayout.show(parent, "Menu Panel");
-	    });
-	  }
+	    var cardLayout = (CardLayout) parent.getLayout();
+	    cardLayout.show(parent, "Menu Panel");
+	  });
+	}
+
+	public void loadData() {
+		var teachers = this.teacherController.getAll();
+		var subject = "";
+		if (tfProcessCode.getText() != null && !tfProcessCode.getText().isEmpty()) {
+			subject = this.subjectController.find(s -> s.getProcess().equals(tfProcessCode.getText())).getCode();
+		}
+
+		var teachersCpf = new String[teachers.size()];
+
+		int i = 0;
+
+		while (!teachers.isEmpty()) {
+			var teacher = teachers.dequeue();
+			teachersCpf[i] = teacher.getCpf();
+			i++;
+		}
+
+		candidatesComboBox.setModel(new DefaultComboBoxModel<String>(teachersCpf));
+		subjectComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { subject }));
+		subjectComboBox.setEnabled(false);
+	}
+
+	public void setProcessCode(String processCode) {
+		tfProcessCode.setText(processCode);
+	}
 }

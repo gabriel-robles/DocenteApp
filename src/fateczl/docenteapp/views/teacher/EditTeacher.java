@@ -7,9 +7,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
+import javax.swing.JFormattedTextField;
 
 import fateczl.docenteapp.controllers.TeacherController;
-import fateczl.docenteapp.views.dtos.TeacherDto;
+import fateczl.docenteapp.controllers.dtos.TeacherDto;
 
 
 
@@ -54,10 +56,17 @@ public class EditTeacher extends JPanel
 		    tfNomeTeacherEdit.setBounds(114, 40, 314, 19);
 		    add(tfNomeTeacherEdit);
 		    tfNomeTeacherEdit.setColumns(10);
-		    
-		    tfTeacherCPFEdit = new JTextField();
+
+				try {
+					MaskFormatter cpfFormatter = new MaskFormatter("###.###.###-##");
+					cpfFormatter.setPlaceholderCharacter('0');
+					tfTeacherCPFEdit = new JFormattedTextField(cpfFormatter);
+					tfTeacherCPFEdit.setBounds(114, 70, 314, 19);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 		    tfTeacherCPFEdit.setColumns(10);
-		    tfTeacherCPFEdit.setBounds(114, 70, 314, 19);
 		    add(tfTeacherCPFEdit);
 		    
 		    tfAreaTeacherEdit = new JTextField();

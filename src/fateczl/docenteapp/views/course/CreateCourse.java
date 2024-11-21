@@ -1,7 +1,8 @@
 package fateczl.docenteapp.views.course;
 
 import fateczl.docenteapp.controllers.CourseController;
-import fateczl.docenteapp.views.dtos.CourseDto;
+import fateczl.docenteapp.controllers.dtos.CourseDto;
+
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import javax.swing.JButton;

@@ -1,4 +1,4 @@
-package fateczl.docenteapp.model;
+package fateczl.docenteapp.models;
 
 import fateczl.csvdb.annotations.CsvColumn;
 
@@ -6,26 +6,30 @@ public class Subject {
 	@CsvColumn(columnIndex = "0", columnName = "Id", primaryKey = true)
 	private final Integer id;
 
-	@CsvColumn(columnIndex = "1", columnName = "Code")
+	@CsvColumn(columnIndex = "1", columnName = "Process")
+	private final String process;
+
+	@CsvColumn(columnIndex = "2", columnName = "Code")
 	private final String code;
 
-	@CsvColumn(columnIndex = "2", columnName = "Name")
+	@CsvColumn(columnIndex = "3", columnName = "Name")
 	private final String name;
 
-	@CsvColumn(columnIndex = "3", columnName = "CourseCode")
-	private final Integer courseCode;
+	@CsvColumn(columnIndex = "4", columnName = "CourseCode")
+	private final String courseCode;
 	
-	@CsvColumn(columnIndex = "4", columnName = "Day")
+	@CsvColumn(columnIndex = "5", columnName = "Day")
 	private final String day;
 	
-	@CsvColumn(columnIndex = "5", columnName = "Start Time")
+	@CsvColumn(columnIndex = "6", columnName = "StartTime")
 	private final String startTime;
 
-	@CsvColumn(columnIndex = "6", columnName = "Hours Per Day")
+	@CsvColumn(columnIndex = "7", columnName = "HoursPerDay")
 	private final String hoursPerDay;
 	
 	public Subject() {
 		this.id = null;
+		this.process = null;
 		this.code = null;
 		this.name = null;
 		this.courseCode = null;
@@ -36,6 +40,7 @@ public class Subject {
 
 	Subject(Builder builder) {
 		this.id = builder.id;
+		this.process = builder.process;
 		this.code = builder.code;
 		this.name = builder.name;
 		this.courseCode = builder.courseCode;
@@ -48,6 +53,10 @@ public class Subject {
 		return id;
 	}
 
+	public String getProcess() {
+		return process;
+	}
+
 	public String getCode() {
 		return code;
 	}
@@ -56,7 +65,7 @@ public class Subject {
 		return name;
 	}
 
-	public Integer getCourseCode() {
+	public String getCourseCode() {
 		return courseCode;
 	}
 	public String getDay() {
@@ -75,6 +84,7 @@ public class Subject {
 	public String toString() {
 		return "Course{"
 				+ "id=" + id
+				+ ", process='" + process + '\''
 				+ ", code='" + code + '\''
 				+ ", name='" + name + '\''
 				+ ", courseCode='"+ courseCode + '\''
@@ -89,9 +99,10 @@ public class Subject {
 	 */
 	public static class Builder {
 		private Integer id;
+		private String process;
 		private String code;
 		private String name;
-		private Integer courseCode;
+		private String courseCode;
 		private String day;
 		private String hoursPerDay;
 		private String startTime;
@@ -104,6 +115,17 @@ public class Subject {
 		 */
 		public Builder id(Integer id) {
 			this.id = id;
+			return this;
+		}
+
+		/**
+		 * Sets the process for the Subject.
+		 *
+		 * @param process the process to set
+		 * @return the Builder instance for chaining
+		 */
+		public Builder process(String process) {
+			this.process = process;
 			return this;
 		}
 
@@ -135,7 +157,7 @@ public class Subject {
 		 * @param courseCode the course code to set
 		 * @return the Builder instance for chaining
 		 */
-		public Builder courseCode(Integer courseCode) {
+		public Builder courseCode(String courseCode) {
 			this.courseCode = courseCode;
 			return this;
 		}

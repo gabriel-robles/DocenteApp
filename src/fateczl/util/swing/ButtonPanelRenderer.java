@@ -28,15 +28,18 @@ import javax.swing.table.TableCellRenderer;
  * @see javax.swing.table.TableCellRenderer
  */
 public class ButtonPanelRenderer extends JPanel implements TableCellRenderer {
-  private final JButton editButton;
-  private final JButton deleteButton;
-
-  public ButtonPanelRenderer() {
+  public ButtonPanelRenderer(String button1Text, String button2Text) {
     setLayout(new GridLayout(1, 2));
-    editButton = new JButton("Editar");
-    deleteButton = new JButton("Deletar");
-    add(editButton);
-    add(deleteButton);
+    var button1 = new JButton(button1Text);
+    var button2 = new JButton(button2Text);
+    add(button1);
+    add(button2);
+  }
+
+  public ButtonPanelRenderer(String button1Text) {
+    setLayout(new GridLayout(1, 1));
+    var button1 = new JButton(button1Text);
+    add(button1);
   }
 
   @Override

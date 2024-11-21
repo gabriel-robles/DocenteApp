@@ -9,52 +9,34 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
-import fateczl.csvdb.CsvContextFactory;
-import fateczl.csvdb.CsvMapperFactory;
 import fateczl.docenteapp.controllers.CourseController;
 import fateczl.docenteapp.controllers.SubjectController;
-import fateczl.docenteapp.model.Course;
-import fateczl.docenteapp.model.Subject;
-import fateczl.docenteapp.views.course.EditCourse;
-import fateczl.docenteapp.views.dtos.CourseDto;
-import fateczl.docenteapp.views.dtos.SubjectDto;
-import fateczl.util.Queue;
+import fateczl.docenteapp.controllers.dtos.SubjectDto;
 import fateczl.util.swing.ButtonPanelEditor;
 import fateczl.util.swing.ButtonPanelRenderer;
 import fateczl.util.swing.CustomTableModel;
 import fateczl.util.swing.FixedTableColumnModel;
-import javax.swing.DefaultComboBoxModel;
 
 public class GetSubjects extends JPanel {
-
 	private final transient SubjectController subjectController;
 	private final transient CourseController courseController;
 	private JButton createButton;
-	private JButton searchButton;
-	private JComboBox<String> filterByComboBox;
-	private JTextField searchTextField;
 	private JPanel cardPanel;
 	private JPanel menuPanel;
 	private CardLayout cardLayout;
 	private JSplitPane splitPane;
 	private JScrollPane listPanel;
 	private EditSubject editPanel;
+	private CreateSubject createPanel;
 
-	public GetSubjects() throws IOException {
-		var subjectMapper = CsvMapperFactory.create(Subject.class);
-		var subjectContext = CsvContextFactory.create("subjects", subjectMapper, Subject.class);
-		this.subjectController = new SubjectController(subjectContext);
-
-		var courseMapper = CsvMapperFactory.create(Course.class);
-		var courseContext = CsvContextFactory.create("courses", courseMapper, Course.class);
-		this.courseController = new CourseController(courseContext);
+	public GetSubjects(SubjectController subjectController, CourseController courseController) throws IOException {
+		this.subjectController = subjectController;
+		this.courseController = courseController;
 
 		splitPane = new JSplitPane();
 		splitPane.setPreferredSize(new Dimension(700, 425));
@@ -74,13 +56,13 @@ public class GetSubjects extends JPanel {
 		splitPane.setBottomComponent(listPanel);
 
 		cardPanel.add(splitPane, "Menu Panel");
-		cardPanel.add(new CreateSubject(subjectController, this, courseController), "Create Panel");
-		editPanel = new EditSubject(subjectController, this);
+		createPanel = new CreateSubject(subjectController, courseController, this);
+		cardPanel.add(createPanel, "Create Panel");
+		editPanel = new EditSubject(subjectController, courseController, this);
 		cardPanel.add(editPanel, "Edit Panel");
-		
-		System.out.println("NFJNF");
 
 		createButton.addActionListener(e -> {
+			createPanel.loadData();
 			cardLayout.show(cardPanel, "Create Panel");
 		});
 	}
@@ -90,6 +72,8 @@ public class GetSubjects extends JPanel {
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setDividerLocation(75);
 		splitPane.setDividerSize(0);
+		createPanel.loadData();
+		editPanel.loadData();
 		revalidate();
 		repaint();
 	}
@@ -97,51 +81,55 @@ public class GetSubjects extends JPanel {
 	private JScrollPane createListPanel() {
 		var subjects = this.subjectController.getAll();
 
-		Object[][] data = new Object[subjects.size()][8];
+		Object[][] data = new Object[subjects.size()][9];
 
 		int i = 0;
-		
-		System.out.println(subjects.isEmpty());
 
 		while (!subjects.isEmpty()) {
 			var subject = subjects.dequeue();
 			data[i][0] = subject.getId();
-			data[i][1] = subject.getName();
+			data[i][1] = subject.getProcess();
 			data[i][2] = subject.getCode();
-			data[i][3] = subjectController.getCourseName(subject.getCourseId());
-			data[i][4] = subject.getDay();
-			data[i][5] = subject.getHoursPerDay();
-			data[i][6] = subject.getStartTime();
-			data[i][7] = "Ações";
+			data[i][3] = subject.getName();
+			data[i][4] = subject.getCourseCode();
+			data[i][5] = subject.getDay();
+			data[i][6] = subject.getHoursPerDay();
+			data[i][7] = subject.getStartTime();
+			data[i][8] = "Ações";
 			i++;
 		}
 
-		var columnNames = new String[] { "Id", "Nome", "Código", "Curso", "Dia da Semana", "Duração", "Horário Inicial",
-				"Ações" };
+		var columnNames = new String[] { "Id", "Número do Processo", "Código", "Nome", "Código do Curso", "Dia da Semana", "Duração",
+				"Horário Inicial", "Ações" };
 
-		var tableModel = new CustomTableModel(data, columnNames, new int[] { 7 });
-		var columnModel = new FixedTableColumnModel(0);
+		var tableModel = new CustomTableModel(data, columnNames, new int[] { 8 });
+		var columnModel = new FixedTableColumnModel();
 
 		var table = new JTable(tableModel, columnModel);
 		table.createDefaultColumnsFromModel();
-		table.getColumn("Ações").setCellRenderer(new ButtonPanelRenderer());
+		table.getColumn("Ações").setCellRenderer(new ButtonPanelRenderer("Editar", "Deletar"));
 
-		var buttonPanelEditor = new ButtonPanelEditor(new JCheckBox());
+		var editButton = new JButton("Editar");
+		var deleteButton = new JButton("Deletar");
 
-		buttonPanelEditor.getEditButton().addActionListener(e -> {
+		var buttonPanelEditor = new ButtonPanelEditor(new JCheckBox(), editButton, deleteButton);
+
+		editButton.addActionListener(e -> {
 			var row = table.getSelectedRow();
 			var id = table.getValueAt(row, 0);
+			var process = table.getValueAt(row, 1);
 			var code = table.getValueAt(row, 2);
-			var name = table.getValueAt(row, 1);
-			var course = subjectController.searchCourse(table.getValueAt(row, 3).toString());
-			var day = table.getValueAt(row, 4);
-			var hoursPerDay = table.getValueAt(row, 5);
-			var startTime = table.getValueAt(row, 6);
+			var name = table.getValueAt(row, 3);
+			var courseCode = table.getValueAt(row, 4).toString();
+			var day = table.getValueAt(row, 5);
+			var hoursPerDay = table.getValueAt(row, 6);
+			var startTime = table.getValueAt(row, 7);
 
 			var subjectDto = new SubjectDto();
+			subjectDto.setProcess((String) process);
 			subjectDto.setCode((String) code);
 			subjectDto.setName((String) name);
-			subjectDto.setCourseId(course);
+			subjectDto.setCourseCode(courseCode);
 			subjectDto.setDay((String) day);
 			subjectDto.setHoursPerDay((String) hoursPerDay);
 			subjectDto.setStartTime((String) startTime);
@@ -153,10 +141,11 @@ public class GetSubjects extends JPanel {
 			cardLayout.show(cardPanel, "Edit Panel");
 		});
 
-		buttonPanelEditor.getDeleteButton().addActionListener(e -> {
+		deleteButton.addActionListener(e -> {
 			var row = table.getSelectedRow();
 			var id = table.getValueAt(row, 0);
-			subjectController.delete((Integer) id);
+			var process = table.getValueAt(row, 1);
+			subjectController.delete((Integer) id, (String) process);
 
 			refreshListPanel();
 		});
@@ -167,7 +156,17 @@ public class GetSubjects extends JPanel {
 		table.getColumnModel().getColumn(0).setMaxWidth(0);
 		table.getColumnModel().getColumn(0).setWidth(0);
 		table.getColumnModel().getColumn(0).setPreferredWidth(0);
-		table.getColumnModel().getColumn(7).setPreferredWidth(160);
+		table.getColumnModel().getColumn(1).setMinWidth(0);
+		table.getColumnModel().getColumn(1).setMaxWidth(0);
+		table.getColumnModel().getColumn(1).setWidth(0);
+		table.getColumnModel().getColumn(1).setPreferredWidth(0);
+		table.getColumnModel().getColumn(2).setPreferredWidth(100);
+		table.getColumnModel().getColumn(3).setPreferredWidth(200);
+		table.getColumnModel().getColumn(4).setPreferredWidth(100);
+		table.getColumnModel().getColumn(5).setPreferredWidth(100);
+		table.getColumnModel().getColumn(6).setPreferredWidth(100);
+		table.getColumnModel().getColumn(7).setPreferredWidth(100);
+		table.getColumnModel().getColumn(8).setPreferredWidth(160);
 
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -181,31 +180,30 @@ public class GetSubjects extends JPanel {
 		menuPanel = new JPanel();
 		menuPanel.setLayout(null);
 
-		var filterByLabel = new JLabel("Filtrar por");
-		filterByLabel.setBounds(10, 5, 200, 25);
-
-		filterByComboBox = new JComboBox<>(
-				new String[] { "Nome", "Código", "Curso", "Dia da Semana", "Duração", "Horário Inicial" });
-		filterByComboBox.setModel(new DefaultComboBoxModel(
-				new String[] { "Nome", "Código", "Curso", "Dia da Semana", "Duração", "Horário Inicial" }));
-		filterByComboBox.setBounds(10, 26, 160, 23);
-
-		searchTextField = new JTextField();
-		searchTextField.setBounds(172, 26, 200, 25);
-
-		searchButton = new JButton("buscar");
-		searchButton.setBounds(374, 26, 100, 23);
+		var lblTitle = new JLabel("Disciplinas");
+    lblTitle.setBounds(300, 26, 100, 14);
 
 		createButton = new JButton("cadastrar");
 		createButton.setBounds(550, 26, 100, 23);
 
-		menuPanel.add(filterByLabel);
-		menuPanel.add(filterByComboBox);
-		menuPanel.add(searchTextField);
-		menuPanel.add(searchButton);
+		menuPanel.add(lblTitle);
 		menuPanel.add(createButton);
 
 		return menuPanel;
 	}
 
+	public String[] getCourses() {
+		var courses = courseController.getAll();
+		var courseNames = new String[courses.size()];
+
+		int i = 0;
+
+		while (!courses.isEmpty()) {
+			var course = courses.dequeue();
+			courseNames[i] = course.getName();
+			i++;
+		}
+
+		return courseNames;
+	}
 }

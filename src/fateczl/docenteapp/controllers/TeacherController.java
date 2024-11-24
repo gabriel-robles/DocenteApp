@@ -5,18 +5,21 @@ import java.util.function.Predicate;
 import fateczl.csvdb.CsvContext;
 import fateczl.docenteapp.controllers.dtos.TeacherDto;
 import fateczl.docenteapp.models.Teacher;
+import fateczl.docenteapp.models.Registration;
 import fateczl.util.Queue;
 
 public class TeacherController {
-	private final CsvContext<Teacher> csvContext;
+	private final CsvContext<Teacher> teacherContext;
+	private final CsvContext<Registration> registrationContext;
 	  
-	public TeacherController(CsvContext<Teacher> csvContext) {
-	    this.csvContext = csvContext;
+	public TeacherController(CsvContext<Teacher> teacherContext, CsvContext<Registration> registrationContext) {
+	    this.teacherContext = teacherContext;
+			this.registrationContext = registrationContext;
 	}
 
  	public Queue<Teacher> getAll() {
 	  try {
-	    return csvContext.readAll();
+	    return teacherContext.readAll();
 	  } catch (Exception e) {
 	    e.printStackTrace();
 	    return null;
@@ -25,7 +28,7 @@ public class TeacherController {
 	
 	public Teacher find(Predicate<Teacher> predicate) {
 	  try {
-	    return csvContext.find(predicate);
+	    return teacherContext.find(predicate);
 	  } catch (Exception e) {
 	    e.printStackTrace();
 	    return null;
@@ -41,7 +44,7 @@ public class TeacherController {
 	                    	.build();
 
 	  try {
-	    csvContext.insert(teacher);
+	    teacherContext.insert(teacher);
 	  } catch (Exception e) {
 	    e.printStackTrace();
 	  }
@@ -57,7 +60,7 @@ public class TeacherController {
                   			.build();
 
 	  try {
-	    csvContext.update(teacher, c -> c.getId().equals(teacher.getId()));
+	    teacherContext.update(teacher, c -> c.getId().equals(teacher.getId()));
 	  } catch (Exception e) {
 	    e.printStackTrace();
 	  }
@@ -65,7 +68,9 @@ public class TeacherController {
 
 	public void delete(Integer id) {
 	  try {
-	    csvContext.delete(c -> c.getId().equals(id));
+			var teacher = teacherContext.find(t -> t.getId().equals(id));
+	    teacherContext.delete(t -> t.getId().equals(id));
+			registrationContext.delete(r -> r.getCpf().equals(teacher.getCpf()));
 	  } catch (Exception e) {
 	    e.printStackTrace();
 	  }

@@ -30,7 +30,7 @@ public class Main {
 
         var courseController = new CourseController(courseContext, subjectContext, registrationContext);
         var subjectController = new SubjectController(subjectContext, registrationContext);
-        var teacherController = new TeacherController(teacherContext);
+        var teacherController = new TeacherController(teacherContext, registrationContext);
         var registrationController = new RegistrationController(registrationContext);
 
         new Window(courseController, subjectController, teacherController, registrationController).setVisible(true);
